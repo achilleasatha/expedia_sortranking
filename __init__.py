@@ -1,2 +1,2 @@
-from explore.analysis import Analser
+from dataprep.dataprep import Analser
 from rank.ranker import Ranker
