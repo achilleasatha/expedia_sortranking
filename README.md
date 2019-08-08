@@ -4,6 +4,10 @@ Each record of the dataset is an item in the search results and contains both se
 
 Given these features, try and learn a model for hotel relevance.
 
+##### Evaluation
+Evaluation Metric is NDCG@50. Relevance is given by propbookingbool
+(https://en.wikipedia.org/wiki/Discounted_cumulative_gain#Normalized_DCG)
+
 ##### Data fields
 srch_id: unique identifier for a search <br/>
 visitor_id: visitor id used to submit the search <br/>
