@@ -15,16 +15,17 @@ class DataPrep:
         self.cols_to_impute_median = []
         self.cols_to_drop = ['prop_price_without_discount_local', 'srch_hcom_destination_id',
                              'prop_price_without_discount_usd', 'srch_dest_latitude', 'srch_dest_longitude',
-                             'srch_mobile_app'],
+                             'srch_mobile_app', 'srch_visitor_id'],
         self.cols_to_impute_from_other_cols = {'srch_currency': 'srch_posa_country',
-                                               'srch_visitor_loc_city':'srch_posa_country'}
+                                               'srch_visitor_loc_region': 'srch_visitor_loc_city'}
         self.cols_to_impute_from_vectors = ['prop_price_with_discount_local', 'prop_price_with_discount_usd']
         self.cols_to_purge_top_percentile = ['prop_price_with_discount_local', 'prop_price_with_discount_usd']
+        self.cols_to_fill = ['srch_visitor_wr_member']
         self.cols_to_purge_bottom_percentile = []
         self.data = data
         self.data.set_index('srch_id', inplace=True)
         self.data = self.parse_timestamps()
-        self.data = self.drop_cols_and_empty_rows()
+        self.data = self.drop_cols_and_empty_rows_and_fill()
         self.data = self.purge_outliers()
         self.data = self.fix_room_capacity()
         self.generate_posa_region_map()
@@ -44,10 +45,12 @@ class DataPrep:
         self.data['srch_local_date'] = pd.to_datetime(self.data['srch_local_date'], format='%Y-%m-%d')
         return self.data
 
-    def drop_cols_and_empty_rows(self):
+    def drop_cols_and_empty_rows_and_fill(self):
         for col in self.cols_to_drop:
             self.data = self.data.drop(col, axis=1)
         self.data = self.data.dropna(how='all')
+        for col in self.cols_to_fill:
+            self.data[col] = self.data[col].fillna('Unknown')
         return self.data
 
     def purge_outliers(self):
@@ -77,10 +80,14 @@ class DataPrep:
             pass
         return self.data
 
+    def split_rewards_col(self):
+        # todo
+        return self.data
+
     def impute_averages(self):
         mean_imp = SimpleImputer(missing_values=np.nan, strategy='mean')
         median_imp = SimpleImputer(missing_values=np.nan, strategy='median')
-        mode_imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
+        # mode_imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
         for col in self.cols_to_impute_mean:
             self.data[col] = mean_imp.fit_transform(self.data[col])
         for col in self.cols_to_impute_median:

@@ -4,7 +4,17 @@ from sklearn.pipeline import Pipeline
 
 class Pipeline:
     def __init__(self):
-        pass
+        self.numerical_cols = ['prop_key', 'srch_visitor_visit_nbr', 'srch_los', 'srch_bw', 'srch_adults_cnt',
+                               'srch_children_cnt', 'srch_rm_cnt', 'srch_ci_day', 'srch_co_day', 'srch_mobile_bool',
+                               'prop_travelad_bool', 'prop_dotd_bool', 'prop_price_with_discount_local',
+                               'prop_price_with_discount_usd', 'prop_imp_drr', 'prop_booking_bool',
+                               'prop_brand_bool', 'prop_starrating', 'prop_market_id', 'prop_submarket_id',
+                               'prop_room_capacity', 'prop_review_score', 'prop_review_count', 'prop_hostel_bool']
+        self.categorical_cols = ['srch_visitor_loc_country', 'srch_visitor_loc_region', 'srch_visitor_loc_city',
+                                 'srch_visitor_wr_member', 'srch_posa_continent', 'srch_posa_country', 'srch_device',
+                                 'srch_currency', 'prop_super_region', 'prop_continent', 'prop_country']
+        self.datetime_cols = ['srch_date_time', 'srch_ci', 'srch_co', 'srch_local_date']
+
 
     def pipeline(self):
         anova_filter = SelectKBest(f_regression, k=5)
