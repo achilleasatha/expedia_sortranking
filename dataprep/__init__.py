@@ -1,1 +1,1 @@
-from dataprep.dataprep import Analyser
+from dataprep.dataprep import DataPrep
